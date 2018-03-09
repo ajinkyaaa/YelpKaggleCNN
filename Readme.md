@@ -1,4 +1,4 @@
-# cs632
+# Yelp kaggle dataset
 Deep Learning
 
 
@@ -9,188 +9,178 @@ Basic useful feature list:
  * Drag and drop a file into here to load it
  * File contents are saved in the URL so you can share files
 
+Description:- 
+At Yelp, there are lots of photos and lots of users uploading photos. These photos provide rich local business information across categories. Teaching a computer to understand the context of these photos is not an easy task. Yelp engineers work on deep learning image classification projects in-house, and you can read about them here. 
 
-This assignment is divided in two parts:-
+In this competition, you are given photos that belong to a business and asked to predict the business attributes. There are 9 different attributes in this problem:
+
+0: good_for_lunch
+1: good_for_dinner
+2: takes_reservations
+3: outdoor_seating
+4: restaurant_is_expensive
+5: has_alcohol
+6: has_table_service
+7: ambience_is_classy
+8: good_for_kids
+
+These labels are annotated by the Yelp community. Your task is to predict these labels purely from the business photos uploaded by users. 
+
+Since Yelp is a community driven website, there are duplicated images in the dataset. They are mainly due to:
+
+    users accidentally upload the same photo to the same business more than once (e.g., this and this)
+    chain businesses which upload the same photo to different branches
+
+Yelp is including these as part of the competition, since these are challenges Yelp researchers face every day. 
+
+To deter hand labeling, Kaggle has supplemented the test set with additional "ignored" businesses. These are not counted in the scoring. 
+File descriptions
+
+    train_photos.tgz - photos of the training set
+    test_photos.tgz - photos of the test set
+    train_photo_to_biz_ids.csv - maps the photo id to business id
+    test_photo_to_biz_ids.csv - maps the photo id to business id
+    train.csv - main training dataset. Includes the business id's, and their corresponding labels. 
+    sample_submission.csv - sample submission and the test dataset. This is the correct format for your predictions. It should include the business_id and the corresponding predicted labels.
+
+ 
+ 
+This assignment is divided in three parts:-
 
 
- 1) 1. Import Scikit learn iris data and divide into train and test data in the ratio 70:30.
-    2. Create a custom classifier to train the training data and predict the accuracy.
-    3. Implement fit , predict and constructor method similar to k nearest neighbour classifier
-    4. Input number of nearest neighbour k in classifier method and display accuracy
-
- 2) 1. Retireve 50 emails with labels as spam/ not spam.
-    2. Use dataframe to clean the data and divide the data in 50:50 ratio of training data to test data.
-    3  Implement classiifer developed in part one and train  models.
-    4. put value of nearest neighbour as 3(or any) and test the training data.
-    5. Display acurracy of training data.
-
-Look, a list!
-
- IRIS training data:-
-    array([[ 5.8,  4. ,  1.2,  0.2],
-       [ 5.1,  2.5,  3. ,  1.1],
-       [ 6.6,  3. ,  4.4,  1.4],
-       [ 5.4,  3.9,  1.3,  0.4],
-       [ 7.9,  3.8,  6.4,  2. ],
-       [ 6.3,  3.3,  4.7,  1.6],
-       [ 6.9,  3.1,  5.1,  2.3],
-       [ 5.1,  3.8,  1.9,  0.4],
-       [ 4.7,  3.2,  1.6,  0.2],.....
-
- IRIS testing data:-
-     array([[ 5. ,  3.4,  1.6,  0.4],
-       [ 6.8,  2.8,  4.8,  1.4],
-       [ 5. ,  3.5,  1.6,  0.6],
-       [ 4.8,  3.4,  1.9,  0.2],
-       [ 6.3,  3.4,  5.6,  2.4],
-       [ 5.6,  2.8,  4.9,  2. ],
-       [ 6.8,  3.2,  5.9,  2.3],
-       [ 5. ,  3.3,  1.4,  0.2],
-       [ 5.1,  3.7,  1.5,  0.4],
-       [ 5.9,  3.2,  4.8,  1.8],
-       [ 4.6,  3.1,  1.5,  0.2],
-       [ 5.8,  2.7,  5.1,  1.9],.......
-
- Spam email :- 
-     Bodyfile:-
-       	
-            0	One of a kind Money maker! Try it for free!Fro...
-            1	link to my webcam you wanted Wanna see sexuall...
-            2	Re: How to manage multiple Internet connection...
-            3	[SPAM] Give her 3 hour rodeoEnhance your desi...
-            4	Best Price on the netf5f8m1 (suddenlysusan@Sto...
-            5	linux.ie mailing list memberships reminderThis...
-            6	Re: Apple Sauced...againAt 1:16 AM -0400 on 10...
-            7	Re: results for giant mass-check (phew)I never...
-            8	Re: RPM's %post, %postun etcHave you tried reb...    
-
-      LabelFile:-
-                    label	Name
-            0	0	00000.txt
-            1	0	00001.txt
-            2	1	00002.txt
-            3	0	00003.txt
-            4	0	00004.txt
-            5	1	00005.txt
-            6	1	00006.txt
-            7	1	00007.txt
-            8	1	00008.txt
-            9	1	00009.txt
-            10	1	00010.txt
-            11	0	00011.txt       
-
-And here's some code! :+1:
-
-Classifier:-
-  class myCustomClassifier():
-    def __init__(self,n_number = 3):
-        self.n_number = n_number
-    
-    def fit(self,iris_X_train,iris_y_train):
-        self.iris_X_train = iris_X_train
-        self.iris_y_train = iris_y_train
-        
-    def closest(self,row):
-        
-        tempDist = []
-        tempFull = []
-       
-        counter = 0
-        
-        for i in range(1,len(iris_X_train)):
-            
-            dist = eucledean(row,self.iris_X_train[i])
-            tempDist.append((dist,self.iris_y_train[i]))
-           
-        
-        tempFull = [i[1] for i in sorted(tempDist)[:self.n_number]]
-        voteResult = Counter(tempFull).most_common(1)[0][0]
-     
-        #Take vote of k number of closest train data and return one with most vote      
-        return voteResult
-    
-    
-        
-    def predict(self,x_test):
-        
-        predictions = []
-        for row in x_test:
-            label = self.closest(row)
-            predictions.append(label)
-        return predictions
+** 1) Data Preparation which is done in 	YelpTrainModel-Part1.ipynb. Image data is basically changed to vector format and saved                 in yelpdataset12345.h file.**
+ 
+** 2) YelpTrainModel-Part2.ipynb file is used for training the data using CNN.**
+ ================Model Training ===============================
+ Train on 164389 samples, validate on 35226 samples
+Epoch 1/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5973 - acc: 0.6725 Epoch 00000: val_acc improved from -inf to 0.69199, saving model to weights.00-0.69199.hdf5
+164389/164389 [==============================] - 18209s - loss: 0.5973 - acc: 0.6725 - val_loss: 0.5722 - val_acc: 0.6920
+Epoch 2/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5713 - acc: 0.6929 Epoch 00001: val_acc improved from 0.69199 to 0.70082, saving model to weights.01-0.70082.hdf5
+164389/164389 [==============================] - 17867s - loss: 0.5713 - acc: 0.6929 - val_loss: 0.5606 - val_acc: 0.7008
+Epoch 3/20
+164300/164389 [============================>.] - ETA: 9s - loss: 0.5611 - acc: 0.7005 Epoch 00002: val_acc improved from 0.70082 to 0.70622, saving model to weights.02-0.70622.hdf5
+164389/164389 [==============================] - 18527s - loss: 0.5611 - acc: 0.7005 - val_loss: 0.5522 - val_acc: 0.7062
+Epoch 4/20
+164300/164389 [============================>.] - ETA: 9s - loss: 0.5543 - acc: 0.7054 Epoch 00003: val_acc did not improve
+164389/164389 [==============================] - 18658s - loss: 0.5543 - acc: 0.7054 - val_loss: 0.5551 - val_acc: 0.7041
+Epoch 5/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5487 - acc: 0.7093 Epoch 00004: val_acc improved from 0.70622 to 0.71288, saving model to weights.04-0.71288.hdf5
+164389/164389 [==============================] - 18363s - loss: 0.5487 - acc: 0.7093 - val_loss: 0.5437 - val_acc: 0.7129
+Epoch 6/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5438 - acc: 0.7129 Epoch 00005: val_acc did not improve
+164389/164389 [==============================] - 18200s - loss: 0.5438 - acc: 0.7129 - val_loss: 0.5468 - val_acc: 0.7111
+Epoch 7/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5391 - acc: 0.7167 Epoch 00006: val_acc improved from 0.71288 to 0.71710, saving model to weights.06-0.71710.hdf5
+164389/164389 [==============================] - 18273s - loss: 0.5391 - acc: 0.7167 - val_loss: 0.5379 - val_acc: 0.7171
+Epoch 8/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5338 - acc: 0.7205 Epoch 00007: val_acc improved from 0.71710 to 0.71883, saving model to weights.07-0.71883.hdf5
+164389/164389 [==============================] - 18120s - loss: 0.5338 - acc: 0.7205 - val_loss: 0.5352 - val_acc: 0.7188
+Epoch 9/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5292 - acc: 0.7243 Epoch 00008: val_acc improved from 0.71883 to 0.71999, saving model to weights.08-0.71999.hdf5
+164389/164389 [==============================] - 18187s - loss: 0.5291 - acc: 0.7244 - val_loss: 0.5331 - val_acc: 0.7200
+Epoch 10/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5234 - acc: 0.7282 Epoch 00009: val_acc improved from 0.71999 to 0.72228, saving model to weights.09-0.72228.hdf5
+164389/164389 [==============================] - 18247s - loss: 0.5235 - acc: 0.7281 - val_loss: 0.5308 - val_acc: 0.7223
+Epoch 11/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5169 - acc: 0.7328 Epoch 00010: val_acc did not improve
+164389/164389 [==============================] - 18384s - loss: 0.5169 - acc: 0.7328 - val_loss: 0.5309 - val_acc: 0.7216
+Epoch 12/20
+164300/164389 [============================>.] - ETA: 9s - loss: 0.5098 - acc: 0.7382 Epoch 00011: val_acc improved from 0.72228 to 0.72365, saving model to weights.11-0.72365.hdf5
+164389/164389 [==============================] - 18427s - loss: 0.5099 - acc: 0.7382 - val_loss: 0.5283 - val_acc: 0.7236
+Epoch 13/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.5010 - acc: 0.7445 Epoch 00012: val_acc did not improve
+164389/164389 [==============================] - 18401s - loss: 0.5010 - acc: 0.7445 - val_loss: 0.5304 - val_acc: 0.7224
+Epoch 14/20
+164300/164389 [============================>.] - ETA: 9s - loss: 0.4912 - acc: 0.7516 Epoch 00013: val_acc did not improve
+164389/164389 [==============================] - 18522s - loss: 0.4912 - acc: 0.7516 - val_loss: 0.5303 - val_acc: 0.7221
+Epoch 15/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.4798 - acc: 0.7595 Epoch 00014: val_acc did not improve
+164389/164389 [==============================] - 18158s - loss: 0.4798 - acc: 0.7595 - val_loss: 0.5315 - val_acc: 0.7210
+Epoch 16/20
+164300/164389 [============================>.] - ETA: 8s - loss: 0.4666 - acc: 0.7687 Epoch 00015: val_acc did not improve
+164389/164389 [==============================] - 21974s - loss: 0.4666 - acc: 0.7687 - val_loss: 0.5321 - val_acc: 0.7225
+Epoch 17/20
+164300/164389 [============================>.] - ETA: 9s - loss: 0.4524 - acc: 0.7776 Epoch 00016: val_acc did not improve
+164389/164389 [==============================] - 19021s - loss: 0.4524 - acc: 0.7776 - val_loss: 0.5375 - val_acc: 0.7224
+Epoch 18/20
+164300/164389 [============================>.] - ETA: 14s - loss: 0.4367 - acc: 0.7877Epoch 00017: val_acc did not improve
+164389/164389 [==============================] - 27914s - loss: 0.4367 - acc: 0.7877 - val_loss: 0.5447 - val_acc: 0.7172
+Epoch 19/20
+164300/164389 [============================>.] - ETA: 9s - loss: 0.4209 - acc: 0.7971 Epoch 00018: val_acc did not improve
+164389/164389 [==============================] - 18638s - loss: 0.4209 - acc: 0.7971 - val_loss: 0.5474 - val_acc: 0.7185
+Epoch 20/20
+164300/164389 [============================>.] - ETA: 9s - loss: 0.4060 - acc: 0.8062 Epoch 00019: val_acc did not improve
+164389/164389 [==============================] - 18695s - loss: 0.4061 - acc: 0.8062 - val_loss: 0.5521 - val_acc: 0.7195
 
 
 
-----------------------------------------------------------------------------
-Part 1 b)
+==============Model Summary =================================
 
-1. In a Nearest Neighbor classifier, is it important that all features be on the same scale?
-Think: what would happen if one feature ranges between 0-1, and another ranges
-between 0-1000? If it is important that they are on the same scale, how could you
-achieve this?
-Ans:- All Features can be of different scale  but we should normalize the data for just point of view reference.
-you should normalize data when your model is sensitive to magnitude, and the units of two different features are different, and arbitrary. This is like the case you suggest, in which something gets more influence than it should.
-If One feature is in scale 1-10 and another in 0-1000, the second one will influence more on the result. Normalizing or scaling the data will be helpful.
+Model Summary
+In [60]:
 
-2. What is the difference between a numeric and categorical feature? How might you
-represent a categorical feature so your Nearest Neighbor classifier could work with it?
-Ans:- 
-Categorical:-
-Values or observations that can be sorted into groups or categories.
-Examples: Sex, Eye colour and Favourite colour.
-Bar charts and pie graphs are used to graph categorical data.
+model.summary()
 
-Numerical
-Values or observations that can be measured. And these numbers can be placed in ascending or descending order. Examples: Height, Arm Span and Weight.
-Scatter plots and line graphs are used to graph numerical data.
+_________________________________________________________________
+Layer (type)                 Output Shape              Param #   
+=================================================================
+conv2d_24 (Conv2D)           (None, 32, 100, 100)      896       
+_________________________________________________________________
+activation_33 (Activation)   (None, 32, 100, 100)      0         
+_________________________________________________________________
+conv2d_25 (Conv2D)           (None, 64, 98, 98)        18496     
+_________________________________________________________________
+activation_34 (Activation)   (None, 64, 98, 98)        0         
+_________________________________________________________________
+max_pooling2d_13 (MaxPooling (None, 64, 49, 49)        0         
+_________________________________________________________________
+dropout_16 (Dropout)         (None, 64, 49, 49)        0         
+_________________________________________________________________
+conv2d_26 (Conv2D)           (None, 64, 49, 49)        36928     
+_________________________________________________________________
+activation_35 (Activation)   (None, 64, 49, 49)        0         
+_________________________________________________________________
+conv2d_27 (Conv2D)           (None, 64, 47, 47)        36928     
+_________________________________________________________________
+activation_36 (Activation)   (None, 64, 47, 47)        0         
+_________________________________________________________________
+max_pooling2d_14 (MaxPooling (None, 64, 23, 23)        0         
+_________________________________________________________________
+dropout_17 (Dropout)         (None, 64, 23, 23)        0         
+_________________________________________________________________
+flatten_6 (Flatten)          (None, 33856)             0         
+_________________________________________________________________
+dense_10 (Dense)             (None, 512)               17334784  
+_________________________________________________________________
+activation_37 (Activation)   (None, 512)               0         
+_________________________________________________________________
+dropout_18 (Dropout)         (None, 512)               0         
+_________________________________________________________________
+dense_11 (Dense)             (None, 5)                 2565      
+_________________________________________________________________
+activation_38 (Activation)   (None, 5)                 0         
+=================================================================
+Total params: 17,430,597
+Trainable params: 17,430,597
+Non-trainable params: 0
+================Model Summary =========================
 
-In our case in part1.py , we could use color of the flower to categorize data by assigining bits to the color.
 
-3. What is the importance of testing data?
-Ans:-  In order to estimate how well your model has been trained (that is dependent upon the size of your data, the value you would like to predict, input etc) and to estimate model properties (mean error for numeric predictors, classification errors for classifiers, recall and precision for IR-models etc.)
-
-4. What does “supervised” refer to in “supervised classification”?
-Ans:- In supervised classification the user or image analyst “supervises” the pixel classification process. The user specifies the various pixels values or spectral signatures that should be associated with each class. This is done by selecting representative sample sites of known cover type called Training Sites or Areas. The computer algorithm then uses the spectral signatures from these training areas to classify the whole image.
-
-5. If you were to include additional features for the Iris dataset, what would they be, and
-why?
-Ans:- If we can thin of additional dataset for iris, I can use color and image as a parameter. Using sequential modelling and softmax regression we can more accurately predict the flower type.
+ 3) Testing with new data using TestYelp.ipynb.
 
 
-Part 2 b)
-1. What are the strengths and weaknesses of using a Bag of Words? (Tip: would this
-representation let you distinguish between two sentences the same words, but in a
-different order?)
-Ans:- Weakness -  Bag of words models encode every word in the vocabulary as one-hot-encoded vector i.e. for vocabulary of size |V||V|, each word is represented by a |V||V| dimensional sparse vector with 11 at index corresponding to the word and 00 at every other index. As vocabulary may potentially run into millions, bag of word models face scalability challenges.
-While modeling phrases using bag-of-words the order of words in the phrase is not respected. 
+pred :-
 
-Strengths:- In this model, a text such as a sentence or a document is represented as the bag i.e multiset of its words, disregarding grammar and even word order but keeping multiplicity.  
+array([[ 0.2015743 ,  0.47074479,  0.57633346,  0.51521689,  0.31590924,
+         0.7023387 ,  0.71906191,  0.30924773,  0.53667158]], dtype=float32)
+         
+finalOutput:-
 
-Bag of words does not understand grammer or the order of words in a sentence and hence we cannot distinguish 2 words in same sentences but in different order.
+['Has alchohol', 'Has Table Service']
 
-2. Which of your features do you think is most predictive, least predictive, and why?
-Ans:-  Term frequency, namely, the number of times a term appears in the text is the most predictive feature. This list or vector representation does not preserve the order of the words in the original sentences, which is just the main feature of the Bag-of-words model.
-Least predictive features are vowels like a,e,i,o,u as they are present in every sentence and also words like a ,the ,or, and etc.These can be reduced by normalizing the data.
+         
 
-Did your classifier misclassify any examples? Why or why not?
-Ans:- Yes as the accuracy score is not 1.0, it did misclassify the data. 
-As you can see, this is nearest neighbor votes for k = 3 with 1 as spam and 0 as non spam:-
-[1, 1, 1]
-[1, 1, 0]
-[0, 0, 1]
-[0, 0, 1]
-[1, 1, 1]
-[0, 1, 0]
-[1, 1, 1]
-[1, 0, 0]
-[1, 0, 1]
-[1, 0, 1]
-[1, 1, 1]
-[0, 0, 1]
-[1, 1, 1]
-[1, 1, 1]
-[1, 1, 1]
-
-If nearest neighbor gives out 1 i.e spam and other to neighbors tell it as non spam , it will display as non spam which might be wrong in many cases.
 
 
